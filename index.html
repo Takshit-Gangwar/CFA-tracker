@@ -55,6 +55,13 @@ tr:hover td{background:#f8f9fa}
 .wk-progress{height:4px;background:#e8e8e8;border-radius:2px;overflow:hidden}
 .wk-progress .fill{height:100%;border-radius:2px;background:#2ecc71;transition:width .3s}
 .week-hrs{font-weight:700;font-size:11px;color:#2c3e50}
+@keyframes backlog-pulse{0%,100%{box-shadow:0 0 0 2px rgba(231,76,60,0.2),0 0 8px rgba(231,76,60,0.15)}50%{box-shadow:0 0 0 4px rgba(231,76,60,0.7),0 0 16px rgba(231,76,60,0.35)}}
+.backlog{animation:backlog-pulse 2s ease-in-out infinite;position:relative;z-index:1}
+.backlog .abbr::after{content:' ⚠';font-size:8px}
+#backlogBar{display:none;align-items:center;gap:10px;padding:10px 16px;border-radius:8px;font-size:13px;font-weight:600;margin-bottom:16px}
+#backlogBar.danger{display:flex;background:#fff0f0;border:1px solid #ffd4d4;color:#c0392b}
+#backlogBar .blink{display:inline-block;animation:backlog-pulse 1.5s ease-in-out infinite;border-radius:50%;width:10px;height:10px;background:#e74c3c;flex-shrink:0}
+#backlogBar .bl-details{font-weight:400;font-size:12px;color:#888;margin-left:auto}
 .footer{text-align:center;font-size:11px;color:#aaa;margin-top:20px;padding:16px 0}
 .footer a{color:#888;text-decoration:none}
 .footer a:hover{color:#555}
@@ -76,9 +83,9 @@ tr:hover td{background:#f8f9fa}
     </div>
     <div style="font-size:11px;color:#999">
       <label><input type="checkbox" id="showAll" onchange="render()"> Show all details</label>
-      <button onclick="resetAll()" style="margin-left:8px;padding:3px 10px;font-size:11px;border:1px solid #ddd;border-radius:4px;background:#fff;cursor:pointer;color:#e74c3c">Reset progress</button>
     </div>
   </div>
+  <div id="backlogBar"><span class="blink"></span><span id="backlogMsg"></span><span class="bl-details" id="backlogDetail"></span></div>
   <div class="progress-main"><div class="fill" id="overallBar" style="width:0%"></div></div>
   <div class="legend" id="legend"></div>
   <div class="table-wrap">
@@ -176,6 +183,15 @@ function loadState(){
 }
 function saveState(s){localStorage.setItem(LS_KEY,JSON.stringify(s))}
 
+const SCHEDULE_YEAR = 2025;
+const MONTHS = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+function parseWeekStart(dateStr){
+  const m = dateStr.match(/^(\w{3})\s+(\d+)/);
+  if(!m) return null;
+  return new Date(SCHEDULE_YEAR, MONTHS[m[1]], parseInt(m[2]));
+}
+function toDateStr(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+
 function getKey(w,d){return 'w'+w+'_d'+d}
 function getHrKey(w,d){return 'h'+w+'_d'+d}
 function getQbKey(w){return 'q'+w}
@@ -195,10 +211,12 @@ function render(){
   let html = '<thead><tr><th class="col-week">#</th><th class="col-dates">Dates</th>';
   DAYS.forEach(d => {html += `<th>${d}</th>`;});
   html += '<th class="col-hrs">Hrs</th><th class="col-qb">Qbank</th><th class="col-progress">Wk %</th></tr></thead><tbody>';
-  let totalDone = 0, totalDays = 0, totalHrs = 0, totalQb = 0;
+  const today = new Date(); today.setHours(0,0,0,0);
+  let totalDone = 0, totalDays = 0, totalHrs = 0, totalQb = 0, backlogCount = 0;
   DATA.forEach(w => {
+    const wkStart = parseWeekStart(w.dates);
     html += `<tr><td class="col-week">${w.week}</td><td class="col-dates">${w.dates}</td>`;
-    let wkDone = 0, wkHrs = 0;
+    let wkDone = 0, wkHrs = 0, wkBacklog = 0;
     w.days.forEach((d,i) => {
       const key = getKey(w.week,i);
       const hkey = getHrKey(w.week,i);
@@ -206,10 +224,15 @@ function render(){
       const hrs = parseFloat(state[hkey]) || 0;
       if(checked) wkDone++;
       if(hrs) wkHrs += hrs;
+      const dayDate = wkStart ? new Date(wkStart.getTime() + i*86400000) : null;
+      const isPast = dayDate && dayDate < today;
+      const isBacklog = isPast && !checked && d.t !== 'REST' && d.t !== 'EXAM';
+      if(isBacklog){ wkBacklog++; backlogCount++; }
       const cls = d.t === 'REST' ? 'p-rest' : d.t === 'EXAM' ? 'p-exam' : TOPIC_COLORS[d.t] || 'p4';
       const doneCls = checked ? 'done' : '';
+      const blCls = isBacklog ? 'backlog' : '';
       const extraAct = showAll ? `<span class="act">${d.a}</span>` : '';
-      html += `<td><div class="day-cell ${cls} ${doneCls}" title="${d.a}">
+      html += `<td><div class="day-cell ${cls} ${doneCls} ${blCls}" title="${d.a}">
         <span class="abbr">${d.t}</span>${extraAct}
         <div class="ctrls">
           <input type="checkbox" data-w="${w.week}" data-d="${i}" ${checked?'checked':''}>
@@ -235,6 +258,19 @@ function render(){
   document.getElementById('totalHrs').textContent = totalHrs.toFixed(1);
   document.getElementById('totalQb').textContent = totalQb;
 
+  const blBar = document.getElementById('backlogBar');
+  const blMsg = document.getElementById('backlogMsg');
+  const blDet = document.getElementById('backlogDetail');
+  if(backlogCount > 0){
+    blBar.className = 'danger';
+    blMsg.textContent = backlogCount + ' day' + (backlogCount>1?'s':'') + ' overdue — mark them done to catch up';
+    blDet.textContent = '';
+  } else {
+    blBar.className = '';
+    blMsg.textContent = '';
+    blDet.textContent = '';
+  }
+
   // Event listeners
   table.querySelectorAll('input[type=checkbox]').forEach(cb => {
     cb.addEventListener('change', function(){
@@ -257,11 +293,6 @@ function render(){
       saveState(s); render();
     });
   });
-}
-
-function resetAll(){
-  if(!confirm('Reset ALL progress, hours, and Qbank counts?')) return;
-  saveState({}); render();
 }
 
 renderLegend();
