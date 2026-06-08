@@ -7,7 +7,7 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#eef0f3;color:#1a1a2e;padding:20px}
-.container{max-width:820px;margin:0 auto}
+.container{max-width:860px;margin:0 auto}
 .header{text-align:center;margin-bottom:20px}
 .header h1{font-size:22px;font-weight:800;letter-spacing:-.3px;margin-bottom:4px}
 .header h1 span{color:#e74c3c}
@@ -17,7 +17,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .progress-main .fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#2ecc71,#27ae60);transition:width .4s}
 .legend{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:20px}
 .legend-item{padding:4px 12px;border-radius:5px;font-size:11px;font-weight:600;color:#fff}
-.legend-item.skim{color:#333}
 #backlogBar{display:none;align-items:center;gap:10px;padding:10px 16px;border-radius:8px;font-size:13px;font-weight:600;margin-bottom:16px}
 #backlogBar.danger{display:flex;background:#fff0f0;border:1px solid #ffd4d4;color:#c0392b}
 #backlogBar .pulse-dot{display:inline-block;animation:blip 1.5s ease-in-out infinite;border-radius:50%;width:10px;height:10px;background:#e74c3c;flex-shrink:0}
@@ -30,22 +29,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .week-header .wk-bar{flex:1;height:6px;background:#e0e0e0;border-radius:3px;overflow:hidden;min-width:40px}
 .week-header .wk-bar .fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#2ecc71,#27ae60);transition:width .3s}
 .week-header .wk-count{font-size:11px;color:#888;font-weight:600;white-space:nowrap}
-.day-row{display:flex;align-items:center;gap:8px;padding:8px 16px;border-top:1px solid #f0f0f0;transition:background .15s;position:relative}
+.day-row{display:flex;align-items:center;gap:8px;padding:8px 14px;border-top:1px solid #f0f0f0;transition:background .15s;position:relative}
 .day-row:hover{background:#fafbfc}
 .day-row.today{background:#f0f7ff}
-.day-row.done{opacity:.6}
+.day-row.done{opacity:.55}
 .day-row.done .topic-text{text-decoration:line-through}
-.day-row.done .check{opacity:.4}
 .day-row.backlog{animation:backlog-pulse 2s ease-in-out infinite}
 .day-row.backlog .backlog-badge{display:inline}
-.backlog-badge{display:none;font-size:10px;color:#e74c3c;font-weight:700;margin-left:2px}
+.backlog-badge{display:none;font-size:10px;color:#e74c3c;font-weight:700;margin-left:4px}
 .check{width:22px;height:22px;cursor:pointer;accent-color:#2ecc71;flex-shrink:0}
-.day-date{font-size:12px;color:#555;min-width:90px;flex-shrink:0}
+.day-date{font-size:12px;color:#555;min-width:88px;flex-shrink:0}
 .day-date .dow{font-weight:600}
 .topic-pill{font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;color:#fff;flex-shrink:0;min-width:36px;text-align:center}
 .p0{background:#e74c3c}.p1{background:#e67e22}.p2{background:#d4a017}.p3{background:#27ae60}.p4{background:#95a5a6;color:#333}
 .p-mix{background:#8e44ad}.p-rest{background:#ddd;color:#666}.p-exam{background:#2c3e50}
 .activity-text{font-size:13px;color:#333;flex:1;min-width:0;line-height:1.3}
+.ref{font-size:10px;color:#999;background:#f0f0f0;padding:2px 7px;border-radius:4px;flex-shrink:0;white-space:nowrap;font-weight:600}
 .qb-wrap{display:flex;align-items:center;gap:4px;flex-shrink:0}
 .qb-wrap label{font-size:10px;color:#999;font-weight:600}
 .qb-wrap input{width:48px;height:26px;font-size:12px;text-align:center;border:1px solid #ddd;border-radius:4px;padding:0;outline:none}
@@ -55,17 +54,29 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .sort-controls button:hover{border-color:#aaa;background:#f5f5f5}
 .sort-controls button.active{background:#1a1a2e;color:#fff;border-color:#1a1a2e}
 .empty-state{text-align:center;padding:40px 20px;color:#999;font-size:14px}
+
+/* Supplementary topics */
+.supp-card{background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.07);margin-top:20px;padding:16px 20px}
+.supp-card h3{font-size:14px;font-weight:700;margin-bottom:12px;color:#333}
+.supp-card h3 span{font-size:11px;font-weight:400;color:#999}
+.supp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px}
+.supp-item{display:flex;align-items:center;gap:8px;padding:6px 10px;background:#f7f8fa;border-radius:6px;font-size:12px}
+.supp-item .supp-ref{font-size:10px;font-weight:700;color:#888;background:#e8e8e8;padding:1px 6px;border-radius:3px;flex-shrink:0}
+.supp-item .supp-topic{color:#333;line-height:1.3}
+
 .footer{text-align:center;font-size:11px;color:#aaa;margin-top:16px;padding:12px 0}
 @media(max-width:600px){
   body{padding:10px}
   .container{max-width:100%}
-  .day-row{padding:8px 10px;gap:6px;flex-wrap:wrap}
-  .day-date{min-width:70px;font-size:11px}
-  .activity-text{font-size:12px;width:100%;order:10;padding-left:30px}
-  .qb-wrap{margin-left:auto}
+  .day-row{padding:8px 10px;gap:5px;flex-wrap:wrap}
+  .day-date{min-width:68px;font-size:11px}
+  .activity-text{font-size:12px;width:100%;order:10;padding-left:28px}
+  .qp-wrap{margin-left:auto}
   .stats{gap:12px;font-size:12px}
   .week-header{padding:10px 12px;flex-wrap:wrap}
   .week-header .num{font-size:13px}
+  .ref{font-size:9px;padding:1px 5px}
+  .supp-grid{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -88,10 +99,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
     <button data-filter="backlog">Backlog only</button>
   </div>
   <div id="weeksContainer"></div>
+  <div id="supplementContainer"></div>
   <div class="footer">Data saves automatically in your browser</div>
 </div>
 <script>
-const SCHEDULE_YEAR = 2025;
+const SCHEDULE_YEAR = new Date().getFullYear();
 const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const DAY_NAMES = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 const MONTH_IDX = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
@@ -104,55 +116,152 @@ const PRIORITIES = [
   {key:'low',label:'Lower',cls:'p3',topics:'Portfolio · Derivatives · Alts'},
   {key:'skim',label:'Skim',cls:'p4',topics:'GIPS'}
 ];
-
+const SUPP_TOPICS = [
+  {b:1,r:7,t:'Big Data & Machine Learning Basics'},
+  {b:2,r:27,t:'Financial Statement Modeling'},
+  {b:3,r:30,t:'Business Models Analysis'},
+  {b:3,r:32,t:'Working Capital Management'},
+  {b:5,r:67,t:'Technical Analysis'},
+  {b:5,r:68,t:'Fintech, Blockchain & Robo-Advisors'}
+];
 const DATA = [
 {week:1,dates:'Jun 9-15',days:[
-  {t:'ETH',a:'Standards I (Professionalism)'},{t:'ETH',a:'Standards II (Integrity of Capital Markets)'},{t:'ETH',a:'Standards III (Duties to Clients)'},{t:'ETH',a:'Standards IV (Duties to Employers)'},{t:'ETH',a:'EOC Qs Standards I-IV'},{t:'ETH',a:'Re-read weak areas'},{t:'ETH',a:'Qbank 30 Qs'}
+  {t:'ETH',a:'Standards I (Professionalism)',b:5,r:71},
+  {t:'ETH',a:'Standards II (Integrity of Capital Markets)',b:5,r:71},
+  {t:'ETH',a:'Standards III (Duties to Clients)',b:5,r:71},
+  {t:'ETH',a:'Standards IV (Duties to Employers)',b:5,r:71},
+  {t:'ETH',a:'EOC Qs Standards I-IV',b:5,r:71},
+  {t:'ETH',a:'Re-read weak areas',b:5,r:71},
+  {t:'ETH',a:'Qbank 30 Qs',b:5,r:71}
 ]},
 {week:2,dates:'Jun 16-22',days:[
-  {t:'ETH',a:'Standards V (Investment Analysis)'},{t:'ETH',a:'Standards VI (Conflicts of Interest)'},{t:'ETH',a:'Standard VII + GIPS overview'},{t:'ETH',a:'EOC + ethics case vignettes'},{t:'ETH',a:'Full Ethics review'},{t:'ETH',a:'Go through all standards'},{t:'ETH',a:'Qbank ethics questions'}
+  {t:'ETH',a:'Standards V (Investment Analysis)',b:5,r:71},
+  {t:'ETH',a:'Standards VI (Conflicts of Interest)',b:5,r:71},
+  {t:'ETH',a:'Standard VII + GIPS overview',b:5,r:72},
+  {t:'ETH',a:'EOC + ethics case vignettes',b:5,r:71},
+  {t:'ETH',a:'Full Ethics review',b:5,r:71},
+  {t:'ETH',a:'Go through all standards',b:5,r:71},
+  {t:'ETH',a:'Qbank ethics questions',b:5,r:71}
 ]},
 {week:3,dates:'Jun 23-29',days:[
-  {t:'QNT',a:'Time Value of Money'},{t:'QNT',a:'TVM: annuities, perpetuities'},{t:'QNT',a:'Statistical concepts'},{t:'QNT',a:'Measures: central tendency, dispersion'},{t:'QNT',a:'Probability, Bayes\' theorem'},{t:'QNT',a:'EOC questions'},{t:'QNT',a:'Re-do TVM problems'}
+  {t:'QNT',a:'Time Value of Money',b:1,r:1},
+  {t:'QNT',a:'TVM: annuities, perpetuities',b:1,r:1},
+  {t:'QNT',a:'Statistical concepts',b:1,r:2},
+  {t:'QNT',a:'Measures: central tendency, dispersion',b:1,r:2},
+  {t:'QNT',a:'Probability, Bayes\' theorem',b:1,r:3},
+  {t:'QNT',a:'EOC questions'},
+  {t:'QNT',a:'Re-do TVM problems',b:1,r:1}
 ]},
 {week:4,dates:'Jun 30-Jul 6',days:[
-  {t:'QNT',a:'Probability distributions'},{t:'QNT',a:'Normal, binomial, t-distribution'},{t:'QNT',a:'Sampling & estimation'},{t:'QNT',a:'Confidence intervals'},{t:'QNT',a:'Hypothesis testing'},{t:'QNT',a:'Full Quant review'},{t:'QNT',a:'Qbank 40 Qs'}
+  {t:'QNT',a:'Probability distributions',b:1,r:4},
+  {t:'QNT',a:'Normal, binomial, t-distribution',b:1,r:4},
+  {t:'QNT',a:'Sampling & estimation',b:1,r:5},
+  {t:'QNT',a:'Confidence intervals',b:1,r:5},
+  {t:'QNT',a:'Hypothesis testing',b:1,r:6},
+  {t:'QNT',a:'Full Quant review'},
+  {t:'QNT',a:'Qbank 40 Qs'}
 ]},
 {week:5,dates:'Jul 7-13',days:[
-  {t:'ECON',a:'Micro: demand/supply, elasticity'},{t:'ECON',a:'Micro: firm behaviour, markets'},{t:'ECON',a:'Macro: GDP, inflation, cycles'},{t:'ECON',a:'Macro: monetary & fiscal policy'},{t:'ECON',a:'Intl trade, currency exchange'},{t:'ECON',a:'Full Econ review'},{t:'ECON',a:'EOC questions'}
+  {t:'ECON',a:'Micro: demand/supply, elasticity',b:1,r:8},
+  {t:'ECON',a:'Micro: firm behaviour, markets',b:1,r:9},
+  {t:'ECON',a:'Macro: GDP, inflation, cycles',b:1,r:10},
+  {t:'ECON',a:'Macro: monetary & fiscal policy',b:1,r:12},
+  {t:'ECON',a:'Intl trade, currency exchange',b:1,r:14},
+  {t:'ECON',a:'Full Econ review'},
+  {t:'ECON',a:'EOC questions'}
 ]},
 {week:6,dates:'Jul 14-20',days:[
-  {t:'FRA',a:'Financial reporting framework'},{t:'FRA',a:'Income statement, revenue recog.'},{t:'FRA',a:'Balance sheet'},{t:'FRA',a:'Statement of cash flows'},{t:'FRA',a:'Ratio analysis, DuPont'},{t:'FRA',a:'EOC questions'},{t:'FRA',a:'Re-read income statement'}
+  {t:'FRA',a:'Financial reporting framework',b:2,r:17},
+  {t:'FRA',a:'Income statement, revenue recog.',b:2,r:18},
+  {t:'FRA',a:'Balance sheet',b:2,r:19},
+  {t:'FRA',a:'Statement of cash flows',b:2,r:20},
+  {t:'FRA',a:'Ratio analysis, DuPont',b:2,r:21},
+  {t:'FRA',a:'EOC questions'},
+  {t:'FRA',a:'Re-read income statement',b:2,r:18}
 ]},
 {week:7,dates:'Jul 21-27',days:[
-  {t:'FRA',a:'Inventories: FIFO, LIFO, avg'},{t:'FRA',a:'IFRS vs GAAP differences'},{t:'FRA',a:'Long-lived assets'},{t:'FRA',a:'Depreciation methods'},{t:'FRA',a:'Income taxes, deferred tax'},{t:'FRA',a:'EOC questions'},{t:'FRA',a:'IFRS vs GAAP summary table'}
+  {t:'FRA',a:'Inventories: FIFO, LIFO, avg',b:2,r:22},
+  {t:'FRA',a:'IFRS vs GAAP differences',b:2,r:22},
+  {t:'FRA',a:'Long-lived assets',b:2,r:23},
+  {t:'FRA',a:'Depreciation methods',b:2,r:23},
+  {t:'FRA',a:'Income taxes, deferred tax',b:2,r:24},
+  {t:'FRA',a:'EOC questions'},
+  {t:'FRA',a:'IFRS vs GAAP summary table',b:2,r:22}
 ]},
 {week:8,dates:'Jul 28-Aug 3',days:[
-  {t:'FRA',a:'Non-current liabilities, bonds'},{t:'FRA',a:'Leases: IFRS 16 / ASC 842'},{t:'FRA',a:'Intercorporate investments'},{t:'FRA',a:'Full FRA revision'},{t:'FRA',a:'Ratio cheat sheet'},{t:'FRA',a:'Qbank 50 FRA Qs'},{t:'FRA',a:'Review all wrong answers'}
+  {t:'FRA',a:'Non-current liabilities, bonds',b:2,r:25},
+  {t:'FRA',a:'Leases: IFRS 16 / ASC 842',b:2,r:25},
+  {t:'FRA',a:'Intercorporate investments',b:2,r:19},
+  {t:'FRA',a:'Full FRA revision'},
+  {t:'FRA',a:'Ratio cheat sheet'},
+  {t:'FRA',a:'Qbank 50 FRA Qs'},
+  {t:'FRA',a:'Review all wrong answers'}
 ]},
 {week:9,dates:'Aug 4-10',days:[
-  {t:'CF',a:'Capital budgeting: NPV, IRR'},{t:'CF',a:'Payback, profitability index'},{t:'CF',a:'WACC, cost of equity (CAPM)'},{t:'CF',a:'MCC schedule'},{t:'CF',a:'Capital structure, dividends'},{t:'CF',a:'Governance, ESG basics'},{t:'CF',a:'EOC questions'}
+  {t:'CF',a:'Capital budgeting: NPV, IRR',b:3,r:31},
+  {t:'CF',a:'Payback, profitability index',b:3,r:31},
+  {t:'CF',a:'WACC, cost of equity (CAPM)',b:3,r:33},
+  {t:'CF',a:'MCC schedule',b:3,r:33},
+  {t:'CF',a:'Capital structure, dividends',b:3,r:34},
+  {t:'CF',a:'Governance, ESG basics',b:3,r:29},
+  {t:'CF',a:'EOC questions'}
 ]},
 {week:10,dates:'Aug 11-17',days:[
-  {t:'EQ',a:'Market organisation, order types'},{t:'EQ',a:'Trading mechanisms'},{t:'EQ',a:'Security market indices'},{t:'EQ',a:'Market efficiency, anomalies'},{t:'EQ',a:'Equity securities overview'},{t:'EQ',a:'EOC questions'},{t:'EQ',a:'Qbank 30 Qs'}
+  {t:'EQ',a:'Market organisation, order types',b:3,r:36},
+  {t:'EQ',a:'Trading mechanisms',b:3,r:36},
+  {t:'EQ',a:'Security market indices',b:3,r:37},
+  {t:'EQ',a:'Market efficiency, anomalies',b:3,r:38},
+  {t:'EQ',a:'Equity securities overview',b:3,r:39},
+  {t:'EQ',a:'EOC questions'},
+  {t:'EQ',a:'Qbank 30 Qs'}
 ]},
 {week:11,dates:'Aug 18-24',days:[
-  {t:'EQ',a:'Industry analysis: Porter\'s 5'},{t:'EQ',a:'Lifecycle, strategies'},{t:'EQ',a:'DDM: Gordon Growth Model'},{t:'EQ',a:'P/E, P/B, P/S, EV/EBITDA'},{t:'EQ',a:'Full equity review'},{t:'EQ',a:'EOC questions'},{t:'EQ',a:'Qbank 40 Qs'}
+  {t:'EQ',a:'Industry analysis: Porter\'s 5',b:3,r:40},
+  {t:'EQ',a:'Lifecycle, strategies',b:3,r:40},
+  {t:'EQ',a:'DDM: Gordon Growth Model',b:3,r:41},
+  {t:'EQ',a:'P/E, P/B, P/S, EV/EBITDA',b:3,r:41},
+  {t:'EQ',a:'Full equity review'},
+  {t:'EQ',a:'EOC questions'},
+  {t:'EQ',a:'Qbank 40 Qs'}
 ]},
 {week:12,dates:'Aug 25-31',days:[
-  {t:'FI',a:'Bond features, indenture'},{t:'FI',a:'Bond types, markets'},{t:'FI',a:'Bond valuation: pricing, YTM'},{t:'FI',a:'Spot rates, forward rates'},{t:'FI',a:'Yield measures, yield curve'},{t:'FI',a:'Term structure theories'},{t:'FI',a:'Bond math practice'}
+  {t:'FI',a:'Bond features, indenture',b:4,r:42},
+  {t:'FI',a:'Bond types, markets',b:4,r:43},
+  {t:'FI',a:'Bond valuation: pricing, YTM',b:4,r:44},
+  {t:'FI',a:'Spot rates, forward rates',b:4,r:44},
+  {t:'FI',a:'Yield measures, yield curve',b:4,r:44},
+  {t:'FI',a:'Term structure theories',b:4,r:44},
+  {t:'FI',a:'Bond math practice'}
 ]},
 {week:13,dates:'Sep 1-7',days:[
-  {t:'FI',a:'Macaulay duration'},{t:'FI',a:'Modified duration'},{t:'FI',a:'Convexity'},{t:'FI',a:'Credit risk, ratings, spreads'},{t:'FI',a:'Full FI review'},{t:'FI',a:'Qbank 50 FI Qs'},{t:'FI',a:'Review all errors'}
+  {t:'FI',a:'Macaulay duration',b:4,r:46},
+  {t:'FI',a:'Modified duration',b:4,r:46},
+  {t:'FI',a:'Convexity',b:4,r:46},
+  {t:'FI',a:'Credit risk, ratings, spreads',b:4,r:47},
+  {t:'FI',a:'Full FI review'},
+  {t:'FI',a:'Qbank 50 FI Qs'},
+  {t:'FI',a:'Review all errors'}
 ]},
 {week:14,dates:'Sep 8-14',days:[
-  {t:'DER',a:'Forwards, futures, swaps'},{t:'DER',a:'Payoff diagrams'},{t:'DER',a:'Options, put-call parity'},{t:'ALT',a:'Real estate, hedge funds, PE'},{t:'DER',a:'Both chapters review'},{t:'ALT',a:'Qbank 30 Qs'},{t:'MIX',a:'Derivatives + Alts review'}
+  {t:'DER',a:'Forwards, futures, swaps',b:4,r:49},
+  {t:'DER',a:'Payoff diagrams',b:4,r:49},
+  {t:'DER',a:'Options, put-call parity',b:4,r:49},
+  {t:'ALT',a:'Real estate, hedge funds, PE',b:4,r:60},
+  {t:'DER',a:'Both chapters review'},
+  {t:'ALT',a:'Qbank 30 Qs'},
+  {t:'MIX',a:'Derivatives + Alts review'}
 ]},
 {week:15,dates:'Sep 15-21',days:[
-  {t:'PM',a:'Portfolio theory, risk/return'},{t:'PM',a:'Diversification, efficient frontier'},{t:'PM',a:'CAPM, beta, SML'},{t:'PM',a:'IPS: RRTTLLU framework'},{t:'PM',a:'Behavioural finance overview'},{t:'PM',a:'Risk management'},{t:'PM',a:'EOC + full PM review'}
+  {t:'PM',a:'Portfolio theory, risk/return',b:5,r:62},
+  {t:'PM',a:'Diversification, efficient frontier',b:5,r:62},
+  {t:'PM',a:'CAPM, beta, SML',b:5,r:63},
+  {t:'PM',a:'IPS: RRTTLLU framework',b:5,r:64},
+  {t:'PM',a:'Behavioural finance overview',b:5,r:65},
+  {t:'PM',a:'Risk management',b:5,r:66},
+  {t:'PM',a:'EOC + full PM review'}
 ]},
 {week:16,dates:'Sep 22-28',days:[
-  {t:'ETH',a:'Re-read all standards'},{t:'ETH',a:'Qbank 40, grey-area vignettes'},{t:'QNT',a:'Formula sheet, TVM problems'},{t:'QNT',a:'Hypothesis testing review'},{t:'ECON',a:'Macro policy + exchange rates'},{t:'ECON',a:'Mixed Qbank 60 Qs'},{t:'MIX',a:'Review weak areas'}
+  {t:'ETH',a:'Re-read all standards',b:5,r:71},{t:'ETH',a:'Qbank 40, grey-area vignettes',b:5,r:71},{t:'QNT',a:'Formula sheet, TVM problems'},{t:'QNT',a:'Hypothesis testing review'},{t:'ECON',a:'Macro policy + exchange rates'},{t:'ECON',a:'Mixed Qbank 60 Qs'},{t:'MIX',a:'Review weak areas'}
 ]},
 {week:17,dates:'Sep 29-Oct 5',days:[
   {t:'FRA',a:'Ratio sheet, IFRS vs GAAP'},{t:'FRA',a:'Adjustments: inventory, leases'},{t:'CF',a:'WACC, capital budgeting'},{t:'EQ',a:'Valuation models recap'},{t:'EQ',a:'Market structure recap'},{t:'MIX',a:'Mixed Qbank 60 Qs'},{t:'MIX',a:'Review errors'}
@@ -167,10 +276,9 @@ const DATA = [
   {t:'MIX',a:'Formula drill: Quant, FRA'},{t:'MIX',a:'Formula drill: FI, CF'},{t:'MIX',a:'Mock Exam 3 AM (90 Qs)'},{t:'MIX',a:'Mock 3 review + Qbank'},{t:'MIX',a:'Qbank weakest 3 topics'},{t:'MIX',a:'Remaining Qbank Qs'},{t:'MIX',a:'Review all'}
 ]},
 {week:21,dates:'Oct 27-Nov 1',days:[
-  {t:'ETH',a:'All standards + GIPS notes'},{t:'MIX',a:'FRA cheat + FI duration'},{t:'MIX',a:'Quant formulas + Equity'},{t:'MIX',a:'Corp Fin+PM+Der flashcards'},{t:'REST',a:'Rest day — exam logistics'},{t:'EXAM',a:'EXAM DAY!'},{t:'EXAM',a:'EXAM DAY!'}
+  {t:'ETH',a:'All standards + GIPS notes',b:5,r:71},{t:'MIX',a:'FRA cheat + FI duration'},{t:'MIX',a:'Quant formulas + Equity'},{t:'MIX',a:'Corp Fin+PM+Der flashcards'},{t:'REST',a:'Rest day — exam logistics'},{t:'EXAM',a:'EXAM DAY!'},{t:'EXAM',a:'EXAM DAY!'}
 ]}
 ];
-
 const LS_KEY = 'cfa_tracker_2025';
 let currentFilter = 'all';
 
@@ -188,7 +296,7 @@ function fmtDate(d){
 }
 function isToday(d){
   var t=new Date();t.setHours(0,0,0,0);
-  return d.getFullYear()==t.getFullYear()&&d.getMonth()==t.getMonth()&&d.getDate()==t.getDate();
+  return d&&d.getFullYear()==t.getFullYear()&&d.getMonth()==t.getMonth()&&d.getDate()==t.getDate();
 }
 
 function renderLegend(){
@@ -196,6 +304,16 @@ function renderLegend(){
   el.innerHTML=PRIORITIES.map(function(p){
     return '<span class="legend-item '+p.cls+'">'+p.label+'</span>';
   }).join('')+'<span class="legend-item" style="background:#8e44ad">Review</span>';
+}
+
+function renderSupp(){
+  var el=document.getElementById('supplementContainer');
+  var html='<div class="supp-card"><h3>Supplementary Topics <span>(lower priority — skim when time allows)</span></h3><div class="supp-grid">';
+  SUPP_TOPICS.forEach(function(s){
+    html+='<div class="supp-item"><span class="supp-ref">B'+s.b+' · R'+s.r+'</span><span class="supp-topic">'+s.t+'</span></div>';
+  });
+  html+='</div></div>';
+  el.innerHTML=html;
 }
 
 function renderWeeks(){
@@ -207,7 +325,7 @@ function renderWeeks(){
   DATA.forEach(function(w){
     var wkStart=parseWeekStart(w.dates);
     var wkEnd=wkStart?new Date(wkStart.getTime()+6*86400000):null;
-    var wkDone=0,wkQb=0,wkBacklog=0;
+    var wkDone=0,wkQb=0;
     var rows='';
     var showWeek;
     if(currentFilter=='all')showWeek=true;
@@ -223,19 +341,21 @@ function renderWeeks(){
       var dayDate=wkStart?new Date(wkStart.getTime()+i*86400000):null;
       var past=dayDate&&dayDate<today;
       var isBL=past&&!checked&&d.t!='REST'&&d.t!='EXAM';
-      if(isBL){wkBacklog++;backlogCount++;}
+      if(isBL)backlogCount++;
+      if(isBL)showWeek=true;
       var tCls=TOPIC_COLORS[d.t]||'p4';
       var dn=checked?'done':'';
       var bl=isBL?'backlog':'';
       var td=isToday(dayDate)?'today':'';
       var doneAttr=checked?'checked':'';
+      var refStr=(d.b&&d.r)?'B'+d.b+' · R'+d.r:'';
 
-      if(isBL)showWeek=true;
       rows+='<div class="day-row '+dn+' '+bl+' '+td+'" data-w="'+w.week+'" data-d="'+i+'">'+
         '<input type="checkbox" class="check" data-w="'+w.week+'" data-d="'+i+'" '+doneAttr+'>'+
         '<span class="day-date">'+(dayDate?fmtDate(dayDate):'')+'</span>'+
         '<span class="topic-pill '+tCls+'">'+d.t+'</span>'+
         '<span class="activity-text">'+d.a+'<span class="backlog-badge">⚠ OVERDUE</span></span>'+
+        (refStr?'<span class="ref">'+refStr+'</span>':'')+
         '<span class="qb-wrap"><label>Q</label><input type="number" class="qb-daily" data-w="'+w.week+'" data-d="'+i+'" value="'+(qb||'')+'" min="0" placeholder="0"></span>'+
         '</div>';
     });
@@ -258,7 +378,7 @@ function renderWeeks(){
   });
 
   if(visible==0&&currentFilter=='backlog'){
-    html='<div class="empty-state">🎉 No backlog! Every day is up to date.</div>';
+    html='<div class="empty-state">No backlog! Every day is up to date.</div>';
   }
 
   container.innerHTML=html;
@@ -306,6 +426,7 @@ function setFilter(f){
 }
 
 renderLegend();
+renderSupp();
 renderWeeks();
 document.querySelectorAll('.sort-controls button').forEach(function(b){
   b.onclick=function(){setFilter(this.dataset.filter);};
